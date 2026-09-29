@@ -2,18 +2,18 @@
 # Rainbow Cake GO — Dockerfile (multi-stage)
 # ═══════════════════════════════════════════════
 
-# ── Stage 1: Dependencies ──────────────────────
-FROM node:20-alpine AS deps
+# ── Stage 0: Base ──────────────────────────────
+FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# ── Stage 1: Dependencies ──────────────────────
+FROM base AS deps
 COPY package.json package-lock.json ./
 RUN npm ci --legacy-peer-deps || npm ci --force
 
 # ── Stage 2: Builder ──────────────────────────
-FROM node:20-alpine AS builder
-WORKDIR /app
-
+FROM base AS builder
 # Accept DATABASE_URL as build argument
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
@@ -29,9 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # ── Stage 3: Runner ───────────────────────────
-FROM node:20-alpine AS runner
-WORKDIR /app
-
+FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -43,15 +41,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy Prisma schema + CLI for migrations & seed
+# Copy Prisma schema and engines for runtime
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/tsx ./node_modules/tsx
 COPY --from=builder /app/node_modules/bcrypt ./node_modules/bcrypt
-COPY --from=builder /app/node_modules/esbuild ./node_modules/esbuild
+COPY --from=builder /app/node_modules/node-gyp-build ./node_modules/node-gyp-build
 
 # Create uploads directory
 RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads

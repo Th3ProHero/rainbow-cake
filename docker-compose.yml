@@ -7,6 +7,7 @@ services:
   app:
     build:
       context: .
+      target: runner
       args:
         DATABASE_URL: postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
     container_name: rcg_app
@@ -74,6 +75,7 @@ services:
   migrate:
     build:
       context: .
+      target: builder
       args:
         DATABASE_URL: postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
     container_name: rcg_migrate
@@ -87,7 +89,7 @@ services:
       - ADMIN_SEED_NAME=${ADMIN_SEED_NAME:-Administrador}
       - ADMIN_NOTIFY_EMAILS=${ADMIN_NOTIFY_EMAILS:-admin@rainbowcakego.com}
       - WHATSAPP_BUSINESS_NUMBER=${WHATSAPP_BUSINESS_NUMBER:-+5215512345678}
-    command: ["sh", "-c", "node ./node_modules/prisma/build/index.js db push --skip-generate && node ./node_modules/tsx/dist/cli.mjs prisma/seed.ts"]
+    command: ["sh", "-c", "npx prisma db push --skip-generate && npx tsx prisma/seed.ts"]
     networks:
       - rcg_network
 
