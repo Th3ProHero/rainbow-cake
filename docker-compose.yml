@@ -82,7 +82,7 @@ services:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
-    command: npx prisma migrate deploy
+    command: ["node", "./node_modules/prisma/build/index.js", "migrate", "deploy"]
     networks:
       - rcg_network
 
