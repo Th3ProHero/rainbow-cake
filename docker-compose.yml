@@ -5,7 +5,10 @@
 services:
   # ── App ───────────────────────────────────────
   app:
-    build: .
+    build:
+      context: .
+      args:
+        DATABASE_URL: postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
     container_name: rcg_app
     restart: unless-stopped
     ports:
@@ -69,7 +72,10 @@ services:
 
   # ── Migrations (runs once) ───────────────────
   migrate:
-    build: .
+    build:
+      context: .
+      args:
+        DATABASE_URL: postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
     container_name: rcg_migrate
     depends_on:
       db:
