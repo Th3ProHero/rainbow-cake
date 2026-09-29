@@ -1,0 +1,104 @@
+# ═══════════════════════════════════════════════
+# Rainbow Cake GO — Docker Compose
+# ═══════════════════════════════════════════════
+
+services:
+  # ── App ───────────────────────────────────────
+  app:
+    build: .
+    container_name: rcg_app
+    restart: unless-stopped
+    ports:
+      - "${APP_HOST_PORT:-18473}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - APP_URL=${APP_URL:-http://localhost:18473}
+      - TZ=${TZ:-America/Mexico_City}
+      - CURRENCY=${CURRENCY:-MXN}
+      - LOCALE=${LOCALE:-es-MX}
+      - DEFAULT_PHONE_COUNTRY=${DEFAULT_PHONE_COUNTRY:-MX}
+      - SMTP_HOST=${SMTP_HOST:-mailpit}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - MAIL_FROM=${MAIL_FROM:-Rainbow Cake GO <hola@rainbowcakego.com>}
+      - ADMIN_NOTIFY_EMAILS=${ADMIN_NOTIFY_EMAILS:-admin@rainbowcakego.com}
+      - WHATSAPP_BUSINESS_NUMBER=${WHATSAPP_BUSINESS_NUMBER:-+5215512345678}
+      - UPLOAD_DIR=/app/uploads
+      - MAX_UPLOAD_MB=${MAX_UPLOAD_MB:-10}
+      - REQUIRE_EMAIL_VERIFICATION=${REQUIRE_EMAIL_VERIFICATION:-false}
+    volumes:
+      - rcg_uploads:/app/uploads
+    networks:
+      - rcg_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ── Database ──────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: rcg_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-rcg}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rcg_secret_2024}
+      - POSTGRES_DB=${POSTGRES_DB:-rainbow_cake_go}
+    volumes:
+      - rcg_pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${DB_HOST_PORT:-15439}:5432"
+    networks:
+      - rcg_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rcg} -d ${POSTGRES_DB:-rainbow_cake_go}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Migrations (runs once) ───────────────────
+  migrate:
+    build: .
+    container_name: rcg_migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
+    command: npx prisma migrate deploy
+    networks:
+      - rcg_network
+
+  # ── Mailpit (development only) ───────────────
+  mailpit:
+    image: axllent/mailpit
+    container_name: rcg_mailpit
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_UI_PORT:-18025}:8025"
+      - "${MAILPIT_SMTP_PORT:-11025}:1025"
+    networks:
+      - rcg_network
+    profiles:
+      - dev
+
+volumes:
+  rcg_pgdata:
+    name: rcg_pgdata
+  rcg_uploads:
+    name: rcg_uploads
+
+networks:
+  rcg_network:
+    name: rcg_network

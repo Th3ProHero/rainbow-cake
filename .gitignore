@@ -30,8 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +40,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Rainbow Cake GO
+/uploads
+/backups
+/test-results
+/playwright-report
+/.pgdata
+
+# Bug reports and temporary files
+BUGS_*.md
+LOGIN_BUG_REPORT.txt
+FINAL_STATUS.md
+HYDRATION_FIX.md
+build-log.txt
+.kiro/

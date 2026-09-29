@@ -1,26 +1,148 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ═══════════════════════════════════════════════
+   Rainbow Cake GO — Design System
+   ═══════════════════════════════════════════════ */
+
+/* ── Custom Tailwind Theme ────────────────────── */
+@theme {
+  /* Colors */
+  --color-white: #FFFFFF;
+  --color-meringue: #FFF6F9;
+  --color-cotton: #FFE3EC;
+  --color-strawberry: #D12F6A;
+  --color-strawberry-hover: #B82458;
+  --color-bubblegum: #F27BA3;
+  --color-ink: #2A1720;
+  --color-ink-secondary: #7B6470;
+  --color-border: #F4D9E3;
+  --color-border-light: #FBF0F4;
+
+  /* Status colors */
+  --color-status-pending-bg: #F3EEF1;
+  --color-status-pending-fg: #6B5A63;
+  --color-status-transit-bg: #FFF1D6;
+  --color-status-transit-fg: #8A5A00;
+  --color-status-warehouse-bg: #EDE7FF;
+  --color-status-warehouse-fg: #5B3FC4;
+  --color-status-partial-bg: #FFE3EC;
+  --color-status-partial-fg: #A81F58;
+  --color-status-delivered-bg: #DFF5E7;
+  --color-status-delivered-fg: #1D6B3F;
+  --color-status-cancelled-bg: #FBE4E4;
+  --color-status-cancelled-fg: #A32626;
+
+  /* Payment status colors */
+  --color-payment-none-bg: #F3EEF1;
+  --color-payment-none-fg: #6B5A63;
+  --color-payment-partial-bg: #FFF1D6;
+  --color-payment-partial-fg: #8A5A00;
+  --color-payment-paid-bg: #DFF5E7;
+  --color-payment-paid-fg: #1D6B3F;
+
+  /* Border radius */
+  --radius-chip: 999px;
+  --radius-card: 20px;
+  --radius-input: 12px;
+  --radius-sm: 8px;
+
+  /* Fonts */
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Base Styles ──────────────────────────────── */
+* {
+  border-color: var(--color-border);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background-color: var(--color-meringue);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100dvh;
+}
+
+/* ── Focus styles ─────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-strawberry);
+  outline-offset: 2px;
+}
+
+/* ── Reduced motion ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Typography ───────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.2;
+}
+
+/* ── Scrollbar ────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-meringue);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-chip);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bubblegum);
+}
+
+/* ── Skeleton animation ───────────────────────── */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-skeleton {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ── Item progress bar ────────────────────────── */
+.progress-segment {
+  transition: width 0.5s ease-out, background-color 0.3s ease;
+}
+
+/* ── Toast animations ─────────────────────────── */
+@keyframes toast-slide-in {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes toast-slide-out {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
+}
+
+.toast-enter {
+  animation: toast-slide-in 0.3s ease-out;
+}
+
+.toast-exit {
+  animation: toast-slide-out 0.2s ease-in;
 }
