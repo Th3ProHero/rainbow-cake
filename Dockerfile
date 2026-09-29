@@ -1,4 +1,4 @@
-﻿# ═══════════════════════════════════════════════
+# ═══════════════════════════════════════════════
 # Rainbow Cake GO — Dockerfile (multi-stage)
 # ═══════════════════════════════════════════════
 
@@ -43,10 +43,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-# Copy Prisma schema for migrations
+# Copy Prisma schema + CLI for migrations
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 
 # Create uploads directory
 RUN mkdir -p /app/uploads && chown -R nextjs:nodejs /app/uploads
