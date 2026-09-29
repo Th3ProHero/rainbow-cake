@@ -82,7 +82,12 @@ services:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-rcg}:${POSTGRES_PASSWORD:-rcg_secret_2024}@db:5432/${POSTGRES_DB:-rainbow_cake_go}
-    command: ["node", "./node_modules/prisma/build/index.js", "migrate", "deploy"]
+      - ADMIN_SEED_EMAIL=${ADMIN_SEED_EMAIL:-admin@rainbowcakego.com}
+      - ADMIN_SEED_PASSWORD=${ADMIN_SEED_PASSWORD:-CambiarEnPrimerAcceso2024!}
+      - ADMIN_SEED_NAME=${ADMIN_SEED_NAME:-Administrador}
+      - ADMIN_NOTIFY_EMAILS=${ADMIN_NOTIFY_EMAILS:-admin@rainbowcakego.com}
+      - WHATSAPP_BUSINESS_NUMBER=${WHATSAPP_BUSINESS_NUMBER:-+5215512345678}
+    command: ["sh", "-c", "node ./node_modules/prisma/build/index.js db push --skip-generate && node ./node_modules/tsx/dist/esm/cli.mjs prisma/seed.ts"]
     networks:
       - rcg_network
 
