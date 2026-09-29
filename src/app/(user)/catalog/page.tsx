@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { prisma } from "@/lib/db";
 import { isOfferActive, discountPercentage } from "@/lib/domain/offer";
 import { CatalogView } from "./catalog-view";

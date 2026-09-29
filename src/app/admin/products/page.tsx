@@ -1,4 +1,6 @@
-﻿import { Suspense } from "react";
+export const dynamic = "force-dynamic";
+
+import { Suspense } from "react";
 import { prisma } from "@/lib/db";
 import { isOfferActive } from "@/lib/domain/offer";
 import { ProductsTable } from "./products-table";

@@ -1,0 +1,33 @@
+﻿═══════════════════════════════════════════════════════════════
+✅ FIX PUSHEADO A GITHUB
+═══════════════════════════════════════════════════════════════
+
+🔧 Cambios realizados:
+- @types/node actualizado de v20 a v22
+- Dockerfile modificado para usar --legacy-peer-deps
+- package-lock.json regenerado
+
+═══════════════════════════════════════════════════════════════
+📋 EJECUTA EN TU SERVIDOR UBUNTU:
+═══════════════════════════════════════════════════════════════
+
+cd ~/rainbow-cake
+git pull
+docker compose up -d --build
+
+# Luego:
+docker compose exec app npx prisma migrate deploy
+docker compose exec app npx prisma db seed
+
+# Ver logs:
+docker compose logs -f app
+
+═══════════════════════════════════════════════════════════════
+
+Si el build falla de nuevo, ejecuta:
+
+docker compose down
+docker system prune -af
+docker compose up -d --build
+
+═══════════════════════════════════════════════════════════════

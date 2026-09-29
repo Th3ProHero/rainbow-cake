@@ -1,0 +1,62 @@
+﻿═══════════════════════════════════════════════════════════════
+✅ FIX #2: BOM (Byte Order Mark) REMOVIDO
+═══════════════════════════════════════════════════════════════
+
+El error era causado por caracteres invisibles (BOM) en el package.json.
+Ya está arreglado y pusheado a GitHub.
+
+═══════════════════════════════════════════════════════════════
+📋 EJECUTA EN EL SERVIDOR:
+═══════════════════════════════════════════════════════════════
+
+# 1. Limpiar build anterior
+cd ~/rainbow-cake
+docker compose down
+docker system prune -f
+
+# 2. Actualizar código
+git pull
+
+# 3. Verificar que package.json está limpio
+file package.json
+# Debe decir: "UTF-8 Unicode text" (sin "BOM")
+
+# 4. Build limpio
+docker compose up -d --build
+
+# 5. Monitorear logs
+docker compose logs -f app
+
+# 6. Una vez que app esté corriendo, ejecutar migraciones
+docker compose exec app npx prisma migrate deploy
+docker compose exec app npx prisma db seed
+
+═══════════════════════════════════════════════════════════════
+🔍 VERIFICAR QUE FUNCIONA:
+═══════════════════════════════════════════════════════════════
+
+# Ver estado de contenedores
+docker compose ps
+
+# Deberías ver:
+# - rcg_db      (healthy)
+# - rcg_app     (running)
+
+# Acceder a la app:
+# http://TU_IP:18473
+
+═══════════════════════════════════════════════════════════════
+🆘 SI AÚN FALLA:
+═══════════════════════════════════════════════════════════════
+
+# Opción 1: Build sin caché
+docker compose build --no-cache
+docker compose up -d
+
+# Opción 2: Limpiar TODO Docker
+docker compose down -v
+docker system prune -af --volumes
+git pull
+docker compose up -d --build
+
+═══════════════════════════════════════════════════════════════
