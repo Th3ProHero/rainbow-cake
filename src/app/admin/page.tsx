@@ -141,12 +141,23 @@ export default async function AdminDashboardPage() {
             </Link>
 
             <Link
-              href="/admin/users"
+              href="/admin/banners"
               className="flex items-center justify-between p-3 rounded-xl border border-pink-200/60 hover:bg-cotton/30 transition-colors"
             >
               <div>
-                <h4 className="text-sm font-semibold text-ink">Directorio de Usuarios</h4>
-                <p className="text-xs text-ink-secondary">{userCount} usuarios registrados con WhatsApp</p>
+                <h4 className="text-sm font-semibold text-ink">Banners Promocionales</h4>
+                <p className="text-xs text-ink-secondary">Periodos de pedidos, merch y mensajes de WhatsApp</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-strawberry" />
+            </Link>
+
+            <Link
+              href="/admin/news"
+              className="flex items-center justify-between p-3 rounded-xl border border-pink-200/60 hover:bg-cotton/30 transition-colors"
+            >
+              <div>
+                <h4 className="text-sm font-semibold text-ink">Noticias y Anuncios</h4>
+                <p className="text-xs text-ink-secondary">Comunicaciones oficiales e informes generales</p>
               </div>
               <ArrowRight className="w-4 h-4 text-strawberry" />
             </Link>

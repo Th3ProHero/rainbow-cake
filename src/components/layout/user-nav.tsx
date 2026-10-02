@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Store, ShoppingBag, Package, User } from "lucide-react";
+import { Store, ShoppingBag, Package, User, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/hooks/use-cart";
 
@@ -17,6 +17,7 @@ export function UserBottomNav({ cartItemCount }: UserNavProps) {
 
   const links = [
     { href: "/catalog", label: "Catálogo", icon: Store },
+    { href: "/news", label: "Noticias", icon: Newspaper },
     { href: "/cart", label: "Carrito", icon: ShoppingBag, count: effectiveCount },
     { href: "/orders", label: "Mis pedidos", icon: Package },
     { href: "/profile", label: "Perfil", icon: User },
@@ -73,6 +74,7 @@ export function UserHeader({
 
   const links = [
     { href: "/catalog", label: "Catálogo", icon: Store },
+    { href: "/news", label: "Noticias", icon: Newspaper },
     { href: "/cart", label: "Carrito", icon: ShoppingBag, count: effectiveCount },
     { href: "/orders", label: "Mis pedidos", icon: Package },
     { href: "/profile", label: "Perfil", icon: User },

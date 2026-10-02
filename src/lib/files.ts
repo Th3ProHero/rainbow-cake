@@ -79,7 +79,7 @@ export async function validateFileContent(
  */
 export async function saveUploadedFile(
   buffer: Buffer,
-  folder: "products" | "payments" | "returns",
+  folder: "products" | "payments" | "returns" | "banners" | "news",
   ext: string
 ): Promise<string> {
   const targetDir = path.join(UPLOAD_BASE_DIR, folder);

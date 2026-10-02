@@ -432,3 +432,37 @@ model GroupOrderCost {
 model GroupOrderCodeSequence {
   id    Int @id @default(autoincrement())
 }
+
+// ── Promo Banners (Banners promocionales) ────
+
+model PromoBanner {
+  id            String    @id @default(cuid())
+  title         String
+  description   String?   @db.Text
+  imagePath     String?
+  merchType     String?
+  ordersOpenAt  DateTime?
+  ordersCloseAt DateTime?
+  whatsappMsg   String?   @db.Text
+  isActive      Boolean   @default(true)
+  sortOrder     Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+// ── News Posts (Noticias y anuncios) ─────────
+
+model NewsPost {
+  id          String   @id @default(cuid())
+  title       String
+  body        String   @db.Text
+  imagePath   String?
+  isPublished Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+}

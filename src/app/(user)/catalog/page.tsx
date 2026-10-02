@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function CatalogPage() {
-  const [productsRaw, categories] = await Promise.all([
+  const [productsRaw, categories, bannersRaw, whatsappSetting] = await Promise.all([
     prisma.product.findMany({
       where: {
         status: "ACTIVE",
@@ -27,6 +27,15 @@ export default async function CatalogPage() {
     prisma.category.findMany({
       orderBy: { sortOrder: "asc" },
       select: { id: true, name: true, slug: true },
+    }),
+    prisma.promoBanner.findMany({
+      where: {
+        isActive: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    }),
+    prisma.setting.findUnique({
+      where: { key: "WHATSAPP_PHONE" },
     }),
   ]);
 
@@ -60,5 +69,26 @@ export default async function CatalogPage() {
     };
   });
 
-  return <CatalogView products={products} categories={categories} />;
+  const banners = bannersRaw.map((b) => ({
+    id: b.id,
+    title: b.title,
+    description: b.description,
+    imagePath: b.imagePath,
+    merchType: b.merchType,
+    ordersOpenAt: b.ordersOpenAt ? b.ordersOpenAt.toISOString() : null,
+    ordersCloseAt: b.ordersCloseAt ? b.ordersCloseAt.toISOString() : null,
+    whatsappMsg: b.whatsappMsg,
+  }));
+
+  const whatsappPhone =
+    whatsappSetting?.value || process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "";
+
+  return (
+    <CatalogView
+      products={products}
+      categories={categories}
+      banners={banners}
+      whatsappPhone={whatsappPhone}
+    />
+  );
 }

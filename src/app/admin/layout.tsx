@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/actions/auth";
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, Layers, CreditCard, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, Layers, CreditCard, MessageCircle, Megaphone, Newspaper } from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -16,6 +16,19 @@ export default async function AdminLayout({
   if (!user || user.role !== "ADMIN") {
     redirect("/login?from=/admin");
   }
+
+  const navLinks = [
+    { href: "/admin", label: "Inicio", icon: LayoutDashboard },
+    { href: "/admin/items", label: "Artículos", icon: Package },
+    { href: "/admin/payments", label: "Pagos y Saldos", icon: CreditCard },
+    { href: "/admin/whatsapp", label: "Difusión WhatsApp", icon: MessageCircle },
+    { href: "/admin/banners", label: "Banners Promos", icon: Megaphone },
+    { href: "/admin/news", label: "Noticias y Avisos", icon: Newspaper },
+    { href: "/admin/products", label: "Productos", icon: ShoppingCart },
+    { href: "/admin/categories", label: "Categorías", icon: Layers },
+    { href: "/admin/users", label: "Usuarios", icon: Users },
+    { href: "/admin/settings", label: "Configuración", icon: Settings },
+  ];
 
   return (
     <div className="min-h-screen bg-meringue flex flex-col md:flex-row">
@@ -35,62 +48,19 @@ export default async function AdminLayout({
         </div>
 
         <nav className="flex-1 space-y-1">
-          <Link
-            href="/admin"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium bg-cotton text-strawberry"
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>Inicio</span>
-          </Link>
-          <Link
-            href="/admin/items"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <Package className="w-4 h-4" />
-            <span>Artículos</span>
-          </Link>
-          <Link
-            href="/admin/payments"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <CreditCard className="w-4 h-4" />
-            <span>Pagos y Saldos</span>
-          </Link>
-          <Link
-            href="/admin/whatsapp"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>Difusión WhatsApp</span>
-          </Link>
-          <Link
-            href="/admin/products"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            <span>Productos</span>
-          </Link>
-          <Link
-            href="/admin/categories"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <Layers className="w-4 h-4" />
-            <span>Categorías</span>
-          </Link>
-          <Link
-            href="/admin/users"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <Users className="w-4 h-4" />
-            <span>Usuarios</span>
-          </Link>
-          <Link
-            href="/admin/settings"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue"
-          >
-            <Settings className="w-4 h-4" />
-            <span>Configuración</span>
-          </Link>
+          {navLinks.map((link) => {
+            const Icon = link.icon;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-ink-secondary hover:text-ink hover:bg-meringue transition-colors"
+              >
+                <Icon className="w-4 h-4" />
+                <span>{link.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="pt-4 border-t border-pink-100">
@@ -118,6 +88,23 @@ export default async function AdminLayout({
             <LogOut className="w-4 h-4" />
           </Button>
         </form>
+      </div>
+
+      {/* Mobile Horizontal Subnav */}
+      <div className="md:hidden bg-white/95 backdrop-blur-xs border-b border-pink-100 px-2 py-2 overflow-x-auto no-scrollbar flex items-center gap-1">
+        {navLinks.map((link) => {
+          const Icon = link.icon;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-secondary hover:text-ink hover:bg-cotton/60 shrink-0 transition-colors"
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
       </div>
 
       {/* Main Content */}

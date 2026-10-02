@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import type { CatalogProduct } from "@/types";
+import { PromoBanners, type PromoBannerData } from "./promo-banners";
 import {
   Search,
   Plus,
@@ -29,9 +30,16 @@ interface CategoryItem {
 interface CatalogViewProps {
   products: CatalogProduct[];
   categories: CategoryItem[];
+  banners?: PromoBannerData[];
+  whatsappPhone?: string;
 }
 
-export function CatalogView({ products, categories }: CatalogViewProps) {
+export function CatalogView({
+  products,
+  categories,
+  banners = [],
+  whatsappPhone = "",
+}: CatalogViewProps) {
   const { addItem } = useCart();
   const [search, setSearch] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState<string>("ALL");
@@ -100,7 +108,7 @@ export function CatalogView({ products, categories }: CatalogViewProps) {
   return (
     <div className="space-y-6">
       {/* Header and Search */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold font-display text-ink tracking-tight">
             Catálogo de Merch
@@ -109,6 +117,11 @@ export function CatalogView({ products, categories }: CatalogViewProps) {
             Elige tus artículos favoritos, haz tu pedido y coordina por WhatsApp
           </p>
         </div>
+
+        {/* Promotional Banners */}
+        {banners.length > 0 && (
+          <PromoBanners banners={banners} whatsappPhone={whatsappPhone} />
+        )}
 
         {/* Search input */}
         <div className="relative">
