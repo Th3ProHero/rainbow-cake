@@ -14,6 +14,18 @@ function getSecretKey(): Uint8Array {
 }
 
 /**
+ * Determine if we should use secure cookies.
+ * Only use secure if we're in production AND APP_URL uses https.
+ */
+function shouldUseSecureCookies(): boolean {
+  if (process.env.NODE_ENV !== "production") {
+    return false;
+  }
+  const appUrl = process.env.APP_URL || "";
+  return appUrl.startsWith("https://");
+}
+
+/**
  * Hash a plaintext password with bcrypt (cost 12).
  */
 export async function hashPassword(password: string): Promise<string> {
@@ -81,7 +93,7 @@ export async function createSession(
 
   cookieStore.set(COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureCookies(),
     sameSite: "lax",
     maxAge: SESSION_DURATION,
     path: "/",
