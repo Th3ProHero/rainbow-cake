@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { connection } from "next/server";
 import { prisma } from "@/lib/db";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +12,8 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
+  await connection();
+  
   const [userCount, orderCount, itemsByStatus] = await Promise.all([
     prisma.user.count({ where: { role: "USER" } }),
     prisma.order.count(),
