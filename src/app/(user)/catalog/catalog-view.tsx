@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import type { CatalogProduct } from "@/types";
 import { PromoBanners, type PromoBannerData } from "./promo-banners";
+import { AboutSection } from "./about-section";
 import {
   Search,
   Plus,
@@ -350,6 +351,9 @@ export function CatalogView({
           })}
         </div>
       )}
+
+      {/* About Section */}
+      <AboutSection whatsappPhone={whatsappPhone} />
     </div>
   );
 }
